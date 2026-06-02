@@ -4,6 +4,8 @@ A dark Obsidian theme inspired by a galaxy far, far away, porting the An Old Hop
 
 ## Preview
 
+![An Old Hope Obsidian theme preview](screenshot.png)
+
 An Old Hope keeps the original editor theme's backbone: deep charcoal backgrounds, warm off-white text, red keywords/actions, cyan links and strings, yellow headings/functions, green Markdown/code accents, orange accents, purple constants, and purple bold emphasis.
 
 ## Install
