@@ -1,0 +1,9 @@
+{
+  "name": "an-old-hope-obsidian-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A dark Obsidian theme inspired by a galaxy far, far away.",
+  "scripts": {
+    "test": "node scripts/validate-obsidian-theme.mjs"
+  }
+}
