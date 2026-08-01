@@ -763,13 +763,13 @@ textarea:focus,
 }
 
 .callout {
-  background-color: rgba(var(--callout-color), 0.1);
-  border: 1px solid rgba(var(--callout-color), 0.38);
+  background-color: color-mix(in srgb, var(--callout-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--callout-color) 38%, transparent);
   border-left-width: 3px;
 }
 
 .callout-title {
-  color: rgb(var(--callout-color));
+  color: var(--callout-color);
 }
 
 .callout[data-callout="note"],
@@ -778,7 +778,7 @@ textarea:focus,
 .callout[data-callout="tldr"],
 .callout[data-callout="info"],
 .callout[data-callout="todo"] {
-  --callout-color: 80, 180, 216;
+  --callout-color: rgb(80, 180, 216);
 }
 
 .callout[data-callout="tip"],
@@ -786,7 +786,7 @@ textarea:focus,
 .callout[data-callout="success"],
 .callout[data-callout="check"],
 .callout[data-callout="done"] {
-  --callout-color: 120, 188, 101;
+  --callout-color: rgb(120, 188, 101);
 }
 
 .callout[data-callout="question"],
@@ -795,7 +795,7 @@ textarea:focus,
 .callout[data-callout="warning"],
 .callout[data-callout="caution"],
 .callout[data-callout="attention"] {
-  --callout-color: 231, 206, 87;
+  --callout-color: rgb(231, 206, 87);
 }
 
 .callout[data-callout="failure"],
@@ -804,13 +804,13 @@ textarea:focus,
 .callout[data-callout="danger"],
 .callout[data-callout="error"],
 .callout[data-callout="bug"] {
-  --callout-color: 235, 61, 84;
+  --callout-color: rgb(235, 61, 84);
 }
 
 .callout[data-callout="example"],
 .callout[data-callout="quote"],
 .callout[data-callout="cite"] {
-  --callout-color: 120, 81, 169;
+  --callout-color: rgb(120, 81, 169);
 }
 
 .canvas-wrapper,
