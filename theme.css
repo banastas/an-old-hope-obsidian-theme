@@ -196,7 +196,7 @@ body {
 
   --canvas-background: #1c1d21;
   --canvas-card-label-color: #c9cac5;
-  --canvas-color: 80, 180, 216;
+  --canvas-color: rgb(80, 180, 216);
   --canvas-dot-pattern: rgba(248, 248, 242, 0.08);
 }
 
@@ -366,7 +366,7 @@ body {
 
   --canvas-background: #fbfbf8;
   --canvas-card-label-color: #424741;
-  --canvas-color: 22, 124, 157;
+  --canvas-color: rgb(22, 124, 157);
   --canvas-dot-pattern: rgba(28, 29, 33, 0.08);
 }
 
