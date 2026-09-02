@@ -4,7 +4,10 @@ import process from "node:process";
 
 const root = process.cwd();
 const manifestPath = path.join(root, "manifest.json");
+const packagePath = path.join(root, "package.json");
 const cssPath = path.join(root, "theme.css");
+const readmePath = path.join(root, "README.md");
+const screenshotPath = path.join(root, "screenshot.png");
 
 const requiredManifestFields = ["name", "version", "minAppVersion", "author"];
 const requiredPalette = [
@@ -49,6 +52,18 @@ const contrastPairs = [
     label: "light readable purple",
     selector: ".theme-light",
     variable: "--old-hope-purple-readable",
+    background: "#fbfbf8"
+  },
+  {
+    label: "dark bold green",
+    selector: ".theme-dark",
+    variable: "--old-hope-green",
+    background: "#1c1d21"
+  },
+  {
+    label: "light bold green",
+    selector: ".theme-light",
+    variable: "--old-hope-green",
     background: "#fbfbf8"
   }
 ];
@@ -139,7 +154,10 @@ function checkBalancedCss(css) {
 }
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+const packageManifest = JSON.parse(await readFile(packagePath, "utf8"));
 const css = await readFile(cssPath, "utf8");
+const readme = await readFile(readmePath, "utf8");
+const screenshot = await readFile(screenshotPath);
 
 for (const field of requiredManifestFields) {
   assert(typeof manifest[field] === "string" && manifest[field].trim(), `manifest.json is missing ${field}.`);
@@ -147,7 +165,20 @@ for (const field of requiredManifestFields) {
 
 assert(manifest.name === "An Old Hope", `manifest.json name should be "An Old Hope", found "${manifest.name}".`);
 assert(/^\d+\.\d+\.\d+$/.test(manifest.version), "manifest.json version must be semver-like, e.g. 1.0.0.");
+assert(
+  packageManifest.version === manifest.version,
+  `package.json version ${packageManifest.version} must match manifest.json version ${manifest.version}.`
+);
 assert(/^1\./.test(manifest.minAppVersion), "minAppVersion should target Obsidian 1.x for the modern theme format.");
+assert(readme.includes("](screenshot.png)"), "README.md should display the repository screenshot.");
+assert(
+  screenshot.subarray(1, 4).toString("ascii") === "PNG",
+  "screenshot.png must be a valid PNG image."
+);
+assert(
+  screenshot.readUInt32BE(16) === 1024 && screenshot.readUInt32BE(20) === 576,
+  "screenshot.png must remain 1024x576 for the 16:9 theme preview."
+);
 
 checkBalancedCss(css);
 
@@ -172,10 +203,10 @@ for (const { label, selector, variable, background } of contrastPairs) {
   );
 }
 
-const modeScopedBoldRoles = css.match(/--bold-color: var\(--old-hope-purple-readable\)/g) ?? [];
+const modeScopedBoldRoles = css.match(/--bold-color: var\(--old-hope-green\)/g) ?? [];
 assert(
   modeScopedBoldRoles.length === 2,
-  "Bold prose should use the readable purple role in both theme modes."
+  "Bold prose should use the green role in both theme modes."
 );
 
 assert(!/obsidian\.css/i.test(css), "theme.css should not refer to the legacy obsidian.css theme file.");
