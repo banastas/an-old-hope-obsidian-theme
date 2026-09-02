@@ -194,12 +194,18 @@ body {
   --table-border-color: #3f4654;
   --table-selection: rgba(80, 180, 216, 0.15);
 
-  --graph-line: #3f4654;
-  --graph-node: #50b4d8;
-  --graph-node-unresolved: #767676;
-  --graph-node-focused: #e7ce57;
+  --graph-line: #2b3e4a;
+  --graph-text: #dff7ff;
+  --graph-node: #bdefff;
+  --graph-node-unresolved: #65737e;
+  --graph-node-focused: #ffe792;
   --graph-node-tag: #78bc65;
   --graph-node-attachment: var(--old-hope-purple-readable);
+  --old-hope-graph-background: #080c12;
+  --old-hope-graph-panel: rgba(10, 16, 23, 0.94);
+  --old-hope-graph-grid: rgba(80, 180, 216, 0.075);
+  --old-hope-graph-star: rgba(248, 248, 242, 0.48);
+  --old-hope-graph-frame: rgba(80, 180, 216, 0.34);
 
   --canvas-background: #1c1d21;
   --canvas-card-label-color: #c9cac5;
@@ -368,12 +374,19 @@ body {
   --table-border-color: #c7cbc3;
   --table-selection: rgba(22, 124, 157, 0.13);
 
-  --graph-line: #c7cbc3;
-  --graph-node: #167c9d;
-  --graph-node-unresolved: #767b78;
-  --graph-node-focused: #8a7119;
-  --graph-node-tag: #3f7f34;
-  --graph-node-attachment: #67449a;
+  /* Graph view remains a dark navigation display in either app color mode. */
+  --graph-line: #2b3e4a;
+  --graph-text: #dff7ff;
+  --graph-node: #bdefff;
+  --graph-node-unresolved: #65737e;
+  --graph-node-focused: #ffe792;
+  --graph-node-tag: #8dce79;
+  --graph-node-attachment: #b991e1;
+  --old-hope-graph-background: #080c12;
+  --old-hope-graph-panel: rgba(10, 16, 23, 0.94);
+  --old-hope-graph-grid: rgba(80, 180, 216, 0.075);
+  --old-hope-graph-star: rgba(248, 248, 242, 0.48);
+  --old-hope-graph-frame: rgba(80, 180, 216, 0.34);
 
   --canvas-background: #fbfbf8;
   --canvas-card-label-color: #424741;
@@ -448,7 +461,25 @@ body {
 .hover-popover .markdown-embed {
   background-color: var(--background-secondary);
   border: 1px solid var(--background-modifier-border);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  border-radius: 2px;
+  box-shadow:
+    inset 2px 0 0 rgba(var(--color-blue-rgb), 0.32),
+    0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.status-bar {
+  font-family: var(--font-monospace-theme);
+  font-size: 10px;
+  letter-spacing: 0.055em;
+  box-shadow: inset 0 1px 0 rgba(var(--color-blue-rgb), 0.16);
+}
+
+.status-bar-item {
+  transition: color 120ms ease;
+}
+
+.status-bar-item:hover {
+  color: var(--old-hope-cyan);
 }
 
 button,
@@ -781,6 +812,10 @@ textarea:focus,
 
 .callout-title {
   color: rgb(var(--callout-color));
+  font-family: var(--font-monospace-theme);
+  font-size: 0.9em;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
 }
 
 .callout[data-callout="note"],
@@ -836,8 +871,166 @@ textarea:focus,
   --canvas-node-label-color: var(--canvas-card-label-color);
 }
 
+.canvas-node-container,
+.canvas-controls,
+.canvas-card-menu,
+.canvas-control-group {
+  border-radius: 2px;
+}
+
+.canvas-node-label {
+  font-family: var(--font-monospace-theme);
+  letter-spacing: 0.035em;
+}
+
+.canvas-controls,
+.canvas-card-menu {
+  border-color: var(--background-modifier-border);
+  box-shadow:
+    inset 2px 0 0 rgba(var(--color-blue-rgb), 0.28),
+    0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
 .canvas-node.is-focused {
   --canvas-node-border-color: var(--old-hope-yellow);
+}
+
+.canvas-node.is-selected .canvas-node-container,
+.canvas-node.is-focused .canvas-node-container {
+  box-shadow:
+    0 0 0 1px var(--old-hope-yellow),
+    0 0 18px rgba(231, 206, 87, 0.12);
+}
+
+/* Galactic cartography display -------------------------------------------------
+   Obsidian renders graph data to a canvas, so the star field, range rings, and
+   CRT framing live on the graph viewport while the native renderer remains
+   fully interactive above them. The graph deliberately stays dark in light
+   mode, like a dedicated navigation instrument rather than a document pane. */
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"]) .view-content {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--old-hope-graph-background);
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"]) .view-content::before,
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"]) .view-content::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"]) .view-content::before {
+  background-image:
+    radial-gradient(circle at 50% 48%, rgba(80, 180, 216, 0.13), transparent 43%),
+    radial-gradient(circle, var(--old-hope-graph-star) 0 0.7px, transparent 1px),
+    radial-gradient(circle, rgba(80, 180, 216, 0.58) 0 0.8px, transparent 1.2px),
+    radial-gradient(circle, rgba(248, 248, 242, 0.3) 0 0.55px, transparent 0.9px);
+  background-position:
+    0 0,
+    3px 11px,
+    29px 47px,
+    71px 13px;
+  background-size:
+    100% 100%,
+    37px 37px,
+    83px 83px,
+    131px 131px;
+  opacity: 0.78;
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"]) .view-content::after {
+  z-index: 2;
+  background-image:
+    linear-gradient(to bottom, rgba(80, 180, 216, 0.022) 50%, transparent 50%),
+    linear-gradient(
+      to right,
+      transparent calc(50% - 0.5px),
+      var(--old-hope-graph-grid) 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      to bottom,
+      transparent calc(50% - 0.5px),
+      var(--old-hope-graph-grid) 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      transparent 0 74px,
+      var(--old-hope-graph-grid) 75px,
+      transparent 76px 118px
+    );
+  background-size:
+    100% 4px,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  box-shadow:
+    inset 0 0 0 1px var(--old-hope-graph-frame),
+    inset 0 0 100px rgba(0, 0, 0, 0.74);
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"]) .view-content > canvas {
+  position: relative;
+  z-index: 1;
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"]) .graph-controls {
+  z-index: 3;
+  color: #c8dce2;
+  background-color: var(--old-hope-graph-panel);
+  border-color: var(--old-hope-graph-frame);
+  border-radius: 2px;
+  box-shadow:
+    inset 2px 0 0 rgba(80, 180, 216, 0.42),
+    0 14px 40px rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(8px);
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"])
+  .graph-controls:not(.is-close)::before {
+  display: block;
+  padding: 10px 52px 9px 12px;
+  color: #78c9e6;
+  font-family: var(--font-monospace-theme);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  content: "NAV COMPUTER // INDEX";
+  border-bottom: 1px solid rgba(80, 180, 216, 0.24);
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"])
+  .graph-control-section {
+  border-bottom-color: rgba(80, 180, 216, 0.18);
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"])
+  .graph-control-section-header,
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"])
+  .graph-controls .setting-item-name {
+  color: #dff7ff;
+  font-family: var(--font-monospace-theme);
+  letter-spacing: 0.035em;
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"])
+  .graph-controls input[type="text"] {
+  color: #dff7ff;
+  background-color: rgba(8, 12, 18, 0.86);
+  border-color: rgba(80, 180, 216, 0.28);
+}
+
+.workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"])
+  .graph-controls .clickable-icon:hover {
+  color: #ffe792;
+  background-color: rgba(231, 206, 87, 0.1);
 }
 
 .graph-view.color-fill {
@@ -856,12 +1049,51 @@ textarea:focus,
   color: var(--graph-node-attachment);
 }
 
+.graph-view.color-fill-1 {
+  color: #eb3d54;
+}
+
+.graph-view.color-fill-2 {
+  color: #ef7c2b;
+}
+
+.graph-view.color-fill-3 {
+  color: #e7ce57;
+}
+
+.graph-view.color-fill-4 {
+  color: #78bc65;
+}
+
+.graph-view.color-fill-5 {
+  color: #50b4d8;
+}
+
+.graph-view.color-fill-6 {
+  color: #a67bd5;
+}
+
 .graph-view.color-line {
   color: var(--graph-line);
 }
 
+.graph-view.color-text {
+  color: var(--graph-text);
+}
+
+.graph-view.color-arrow {
+  color: var(--old-hope-cyan);
+  opacity: 0.72;
+}
+
+.graph-view.color-circle {
+  color: var(--graph-node-focused);
+}
+
 .graph-view.color-fill-focused,
-.graph-view.color-line-focused {
+.graph-view.color-line-focused,
+.graph-view.color-fill-highlight,
+.graph-view.color-line-highlight {
   color: var(--graph-node-focused);
 }
 

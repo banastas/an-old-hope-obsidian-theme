@@ -40,6 +40,19 @@ const requiredVariables = [
   "--graph-node",
   "--canvas-background"
 ];
+const requiredGraphMotifs = [
+  "--old-hope-graph-background",
+  "--old-hope-graph-panel",
+  '[data-type="graph"]',
+  '[data-type="localgraph"]',
+  "repeating-radial-gradient",
+  "NAV COMPUTER // INDEX",
+  ".graph-view.color-text",
+  ".graph-view.color-arrow",
+  ".graph-view.color-fill-1",
+  ".graph-view.color-fill-6",
+  ".canvas-controls"
+];
 
 const contrastPairs = [
   {
@@ -65,6 +78,18 @@ const contrastPairs = [
     selector: ".theme-light",
     variable: "--old-hope-green",
     background: "#fbfbf8"
+  },
+  {
+    label: "dark graph labels",
+    selector: ".theme-dark",
+    variable: "--graph-text",
+    background: "#080c12"
+  },
+  {
+    label: "light-mode graph labels",
+    selector: ".theme-light",
+    variable: "--graph-text",
+    background: "#080c12"
   }
 ];
 
@@ -192,6 +217,10 @@ for (const selector of requiredSelectors) {
 
 for (const variable of requiredVariables) {
   assert(css.includes(variable), `theme.css is missing variable ${variable}.`);
+}
+
+for (const motif of requiredGraphMotifs) {
+  assert(css.includes(motif), `theme.css is missing galactic graph motif ${motif}.`);
 }
 
 for (const { label, selector, variable, background } of contrastPairs) {

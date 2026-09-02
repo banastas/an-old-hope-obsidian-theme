@@ -8,6 +8,12 @@ A dark Obsidian theme inspired by a galaxy far, far away, porting the An Old Hop
 
 An Old Hope keeps the original editor theme's backbone: deep charcoal backgrounds, warm off-white text, red keywords/actions, cyan links and strings, yellow headings/functions, green Markdown/code accents and bold emphasis, orange accents, and purple constants. Green gives bold prose a strong, readable skim signal without competing with headings or making ordinary emphasis look like an alert.
 
+## Galactic graph view
+
+Global and local graphs become a dedicated night-mode cartography display in both app color modes. Native Obsidian nodes and links remain fully interactive above a CSS-only star field, concentric range rings, center bearings, scanlines, and a restrained CRT vignette. Focused notes read as warm navigation targets, tags and attachments retain their semantic palette colors, and the graph settings use a compact navigation-computer panel.
+
+The wider interface borrows only the motifs that improve hierarchy: telemetry-style status text, a cyan instrument edge on transient panels, monospaced callout headers, and schematic framing for Canvas controls. Document surfaces remain quiet and readable instead of turning every note into a cockpit prop.
+
 ## Install
 
 ### Manual install
