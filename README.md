@@ -6,7 +6,7 @@ A dark Obsidian theme inspired by a galaxy far, far away, porting the An Old Hop
 
 ![An Old Hope Obsidian theme preview](screenshot.png)
 
-An Old Hope keeps the original editor theme's backbone: deep charcoal backgrounds, warm off-white text, red keywords/actions, cyan links and strings, yellow headings/functions, green Markdown/code accents, orange accents, purple constants, and purple bold emphasis.
+An Old Hope keeps the original editor theme's backbone: deep charcoal backgrounds, warm off-white text, red keywords/actions, cyan links and strings, yellow headings/functions, green Markdown/code accents, orange accents, and purple constants. Bold prose keeps its distinctive purple skim signal, using a lighter accessible purple in dark mode and the original deeper purple in light mode.
 
 ## Install
 
@@ -47,7 +47,7 @@ Run the validation check before publishing:
 npm test
 ```
 
-The validator checks that the manifest matches the expected Obsidian theme shape, the original An Old Hope palette is present, key Obsidian selectors and variables exist, and the CSS has balanced braces/comments/strings.
+The validator checks that the manifest matches the expected Obsidian theme shape, the original An Old Hope palette is present, key Obsidian selectors and variables exist, the CSS has balanced braces/comments/strings, and text-bearing purple roles meet WCAG AA contrast in both color modes.
 
 ## Credits
 

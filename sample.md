@@ -4,7 +4,7 @@
 
 ## Theme At A Glance
 
-An Old Hope is built for notes that need to stay readable while still showing structure. Headings carry the warm yellow from the original palette, subsection titles use orange, links stay cyan, inline code stays green, and **bold emphasis uses purple** so important phrases stand out without turning dense notes into a wall of alarm color.
+An Old Hope is built for notes that need to stay readable while still showing structure. Headings carry the warm yellow from the original palette, subsection titles use orange, links stay cyan, inline code stays green, and **bold emphasis uses an accessible purple** so important phrases remain easy to skim and read.
 
 ### Field Note
 
@@ -38,7 +38,7 @@ An Old Hope is built for notes that need to stay readable while still showing st
 | --- | --- | --- |
 | Heading | Yellow | Primary document structure |
 | Link | Cyan | Internal and external navigation |
-| Bold | Purple | Long-form emphasis |
+| Bold | Accessible purple | Skimmable emphasis |
 | Inline code | Green | `const theme = "An Old Hope"` |
 | Warning | Red | Error and danger callouts |
 
@@ -57,7 +57,7 @@ An Old Hope is built for notes that need to stay readable while still showing st
 > Danger callouts use red for real problems.
 
 > [!example]
-> Examples use purple to match constants and bold emphasis.
+> Examples use accessible purple to match constants and bold emphasis.
 
 ## Code
 

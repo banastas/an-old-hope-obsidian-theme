@@ -38,10 +38,53 @@ const requiredVariables = [
   "--canvas-background"
 ];
 
+const contrastPairs = [
+  {
+    label: "dark readable purple",
+    selector: ".theme-dark",
+    variable: "--old-hope-purple-readable",
+    background: "#1c1d21"
+  },
+  {
+    label: "light readable purple",
+    selector: ".theme-light",
+    variable: "--old-hope-purple-readable",
+    background: "#fbfbf8"
+  }
+];
+
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
+}
+
+function relativeLuminance(hex) {
+  const channels = hex
+    .slice(1)
+    .match(/.{2}/g)
+    .map((channel) => Number.parseInt(channel, 16) / 255)
+    .map((channel) =>
+      channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
+    );
+
+  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+}
+
+function contrastRatio(foreground, background) {
+  const lighter = Math.max(relativeLuminance(foreground), relativeLuminance(background));
+  const darker = Math.min(relativeLuminance(foreground), relativeLuminance(background));
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function readHexVariable(css, selector, variable) {
+  const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const block = css.match(new RegExp(`${escapedSelector}\\s*\\{([\\s\\S]*?)\\n\\}`));
+  assert(block, `theme.css is missing the ${selector} block.`);
+
+  const value = block[1].match(new RegExp(`${variable}:\\s*(#[0-9a-f]{6})`, "i"));
+  assert(value, `${selector} is missing a hex value for ${variable}.`);
+  return value[1].toLowerCase();
 }
 
 function checkBalancedCss(css) {
@@ -119,6 +162,21 @@ for (const selector of requiredSelectors) {
 for (const variable of requiredVariables) {
   assert(css.includes(variable), `theme.css is missing variable ${variable}.`);
 }
+
+for (const { label, selector, variable, background } of contrastPairs) {
+  const foreground = readHexVariable(css, selector, variable);
+  const ratio = contrastRatio(foreground, background);
+  assert(
+    ratio >= 4.5,
+    `${label} must meet WCAG AA contrast; ${foreground} on ${background} is ${ratio.toFixed(2)}:1.`
+  );
+}
+
+const modeScopedBoldRoles = css.match(/--bold-color: var\(--old-hope-purple-readable\)/g) ?? [];
+assert(
+  modeScopedBoldRoles.length === 2,
+  "Bold prose should use the readable purple role in both theme modes."
+);
 
 assert(!/obsidian\.css/i.test(css), "theme.css should not refer to the legacy obsidian.css theme file.");
 assert(css.split("\n").length > 500, "theme.css looks too small for the complete Obsidian port.");

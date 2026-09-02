@@ -19,6 +19,8 @@ body {
   --old-hope-green: #78bc65;
   --old-hope-cyan: #50b4d8;
   --old-hope-purple: #7851a9;
+  --old-hope-purple-readable: #a67bd5;
+  --old-hope-purple-readable-rgb: 166, 123, 213;
   --old-hope-find: #ffe792;
 
   --radius-s: 3px;
@@ -34,8 +36,6 @@ body {
   --font-monospace-theme: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --font-editor-theme: var(--font-text-theme);
 
-  --bold-color: var(--old-hope-purple);
-  --italic-color: var(--text-normal);
   --highlight-mix-blend-mode: normal;
   --inline-title-size: 2.05em;
   --inline-title-weight: 700;
@@ -48,6 +48,12 @@ body {
 
 .theme-dark {
   color-scheme: dark;
+
+  /* The original purple is a syntax-palette reference, but is too dark for text. */
+  --old-hope-purple-readable: #a67bd5;
+  --old-hope-purple-readable-rgb: 166, 123, 213;
+  --bold-color: var(--old-hope-purple-readable);
+  --italic-color: var(--text-normal);
 
   --color-base-00: #1c1d21;
   --color-base-05: #202229;
@@ -71,7 +77,7 @@ body {
   --color-green: #78bc65;
   --color-cyan: #50b4d8;
   --color-blue: #50b4d8;
-  --color-purple: #7851a9;
+  --color-purple: #a67bd5;
   --color-pink: #eb3d54;
   --color-red-rgb: 235, 61, 84;
   --color-orange-rgb: 239, 124, 43;
@@ -79,7 +85,7 @@ body {
   --color-green-rgb: 120, 188, 101;
   --color-cyan-rgb: 80, 180, 216;
   --color-blue-rgb: 80, 180, 216;
-  --color-purple-rgb: 120, 81, 169;
+  --color-purple-rgb: 166, 123, 213;
   --color-pink-rgb: 235, 61, 84;
 
   --accent-h: 352;
@@ -168,7 +174,7 @@ body {
   --code-punctuation: #c9cac5;
   --code-string: #50b4d8;
   --code-tag: #eb3d54;
-  --code-value: #7851a9;
+  --code-value: var(--old-hope-purple-readable);
 
   --tag-color: #f8f8f2;
   --tag-color-hover: #1c1d21;
@@ -192,7 +198,7 @@ body {
   --graph-node-unresolved: #767676;
   --graph-node-focused: #e7ce57;
   --graph-node-tag: #78bc65;
-  --graph-node-attachment: #7851a9;
+  --graph-node-attachment: var(--old-hope-purple-readable);
 
   --canvas-background: #1c1d21;
   --canvas-card-label-color: #c9cac5;
@@ -218,6 +224,10 @@ body {
   --old-hope-green: #3f7f34;
   --old-hope-cyan: #167c9d;
   --old-hope-purple: #67449a;
+  --old-hope-purple-readable: #67449a;
+  --old-hope-purple-readable-rgb: 103, 68, 154;
+  --bold-color: var(--old-hope-purple-readable);
+  --italic-color: var(--text-normal);
   --old-hope-find: #e7ce57;
 
   --color-base-00: #fbfbf8;
@@ -810,7 +820,7 @@ textarea:focus,
 .callout[data-callout="example"],
 .callout[data-callout="quote"],
 .callout[data-callout="cite"] {
-  --callout-color: 120, 81, 169;
+  --callout-color: var(--old-hope-purple-readable-rgb);
 }
 
 .canvas-wrapper,
