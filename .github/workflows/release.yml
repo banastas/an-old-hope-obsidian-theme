@@ -1,0 +1,59 @@
+name: Publish theme
+on:
+  push:
+    tags: ['*']
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to publish or repair
+        required: true
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: theme-release-${{ inputs.tag || github.event.release.tag_name || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ inputs.tag || github.event.release.tag_name || github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
+      - name: Check tag matches manifest
+        run: |
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            const { version } = JSON.parse(readFileSync("manifest.json"));
+            if (process.env.RELEASE_TAG !== version) {
+              throw new Error("Release tag must exactly match manifest version: " + version);
+            }
+          '
+      - name: Attach install files
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" manifest.json theme.css --clobber
+          else
+            gh release create "$RELEASE_TAG" manifest.json theme.css --verify-tag --title "$RELEASE_TAG" --generate-notes
+          fi
+      - name: Verify published install files
+        shell: bash
+        run: |
+          set -euo pipefail
+          download_dir=$(mktemp -d)
+          gh release download "$RELEASE_TAG" --pattern manifest.json --pattern theme.css --dir "$download_dir"
+          cmp manifest.json "$download_dir/manifest.json"
+          cmp theme.css "$download_dir/theme.css"

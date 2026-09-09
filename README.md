@@ -64,3 +64,15 @@ This repository adapts that lineage for Obsidian's modern theme CSS, including t
 ## License
 
 MIT
+
+## Publishing releases
+
+1. Update `version` in both `manifest.json` and `package.json` and run `npm test`.
+2. Commit and push the changes to `main`.
+3. Create and push a tag that exactly matches the manifest version (for example, `1.1.1`, without a `v` prefix).
+
+The **Publish theme** GitHub Actions workflow validates the tagged source, creates a GitHub Release if needed, and attaches `manifest.json` and `theme.css` directly as downloadable assets. It downloads both assets again and compares them byte for byte with the tagged files. Repository files and GitHub's automatic source archives alone do not satisfy Obsidian's install-file checks.
+
+Publishing a release through GitHub also triggers the workflow. To repair an existing release, run **Publish theme** manually from the Actions tab and enter its existing tag. This uses the files from that tag, preserves the release notes, and replaces the two install assets. No version bump is needed for missing assets when the theme itself has not changed.
+
+The **Validate theme** workflow runs the theme checks on pull requests and pushes to `main`. A successful publishing run verifies GitHub assets; the Obsidian directory review is a separate check and may need to run again before its status changes.
