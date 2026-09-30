@@ -33,17 +33,30 @@ body {
   --slider-thumb-radius: 999px;
 
   --font-text-theme: var(--font-interface);
-  --font-monospace-theme: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --font-editor-theme: var(--font-text-theme);
+  /* No generic fallback: Obsidian appends its own monospace stack after this list.
+     ui-monospace resolves to SF Mono in WebKit (iOS), where "monospace" is Courier. */
+  --font-monospace-theme: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, "Liberation Mono";
 
   --highlight-mix-blend-mode: normal;
   --inline-title-size: 2.05em;
   --inline-title-weight: 700;
   --heading-spacing: 0.95rem;
-  --heading-line-height: 1.18;
 
   --metadata-label-width: 9rem;
-  --embed-border-left: 2px solid var(--old-hope-cyan);
+  --metadata-label-text-color: var(--old-hope-yellow);
+  --metadata-label-text-color-hover: var(--old-hope-yellow);
+  --metadata-input-text-color: var(--text-muted);
+  --embed-border-start: 2px solid var(--old-hope-cyan);
+  --list-marker-color: var(--old-hope-orange);
+
+  /* Obsidian 1.13+ expects full CSS colors for callouts, not RGB triplets.
+     Types not listed here already map to the theme palette through --color-*. */
+  --callout-border-width: 1px 1px 1px 3px;
+  --callout-border-opacity: 0.38;
+  --callout-tip: var(--color-green);
+  --callout-question: var(--color-yellow);
+  --callout-warning: var(--color-yellow);
+  --callout-quote: var(--color-purple);
 }
 
 .theme-dark {
@@ -54,7 +67,6 @@ body {
   --old-hope-purple-readable: #a67bd5;
   --old-hope-purple-readable-rgb: 166, 123, 213;
   --bold-color: var(--old-hope-green);
-  --italic-color: var(--text-normal);
 
   --color-base-00: #1c1d21;
   --color-base-05: #202229;
@@ -68,9 +80,6 @@ body {
   --color-base-60: #959798;
   --color-base-70: #c9cac5;
   --color-base-100: #f8f8f2;
-
-  --mono-rgb-0: 0, 0, 0;
-  --mono-rgb-100: 255, 255, 255;
 
   --color-red: #eb3d54;
   --color-orange: #ef7c2b;
@@ -92,9 +101,9 @@ body {
   --accent-h: 352;
   --accent-s: 81%;
   --accent-l: 58%;
-  --interactive-accent: #eb3d54;
-  --interactive-accent-hover: #ff5369;
-  --interactive-accent-rgb: 235, 61, 84;
+  /* Derived from --accent-h/s/l so Settings -> Appearance -> Accent color applies everywhere. */
+  --interactive-accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --interactive-accent-hover: hsl(var(--accent-h), calc(var(--accent-s) + 19%), calc(var(--accent-l) + 8%));
 
   --background-primary: #1c1d21;
   --background-primary-alt: #202229;
@@ -104,10 +113,7 @@ body {
   --background-modifier-border-hover: #565d6a;
   --background-modifier-border-focus: #50b4d8;
   --background-modifier-form-field: #202229;
-  --background-modifier-form-field-highlighted: #272b34;
   --background-modifier-hover: rgba(80, 180, 216, 0.09);
-  --background-modifier-active: rgba(80, 180, 216, 0.14);
-  --background-modifier-selected: rgba(73, 72, 62, 0.78);
   --background-modifier-error: rgba(235, 61, 84, 0.18);
   --background-modifier-error-hover: rgba(235, 61, 84, 0.24);
   --background-modifier-success: rgba(120, 188, 101, 0.18);
@@ -122,7 +128,7 @@ body {
   --text-error: #ff6175;
   --text-warning: #e7ce57;
   --text-success: #78bc65;
-  --text-selection: #f8f8f2;
+  --text-selection: var(--old-hope-selection);
   --text-highlight-bg: rgba(231, 206, 87, 0.22);
   --text-accent: #50b4d8;
   --text-accent-hover: #83d3ee;
@@ -146,9 +152,8 @@ body {
   --tab-text-color-focused-active: #f8f8f2;
   --tab-text-color-focused: #c9cac5;
   --divider-color: #3f4654;
-  --scrollbar-thumb-color: #3f4654;
-  --scrollbar-thumb-color-hover: #565d6a;
-  --scrollbar-active-thumb-color: #50b4d8;
+  --scrollbar-thumb-bg: #3f4654;
+  --scrollbar-active-thumb-bg: #565d6a;
   --status-bar-background: #17181c;
   --status-bar-border-color: #3f4654;
 
@@ -156,10 +161,9 @@ body {
   --nav-item-color-hover: #f8f8f2;
   --nav-item-color-active: #f8f8f2;
   --nav-item-background-hover: rgba(80, 180, 216, 0.09);
-  --nav-item-background-active: rgba(235, 61, 84, 0.16);
+  --nav-item-background-active: color-mix(in srgb, var(--interactive-accent) 16%, transparent);
   --nav-indentation-guide-color: #3f4654;
   --nav-collapse-icon-color: #767676;
-  --nav-collapse-icon-color-collapsed: #767676;
 
   --indentation-guide-color: #3f4654;
   --indentation-guide-color-active: #50b4d8;
@@ -181,8 +185,9 @@ body {
   --tag-color-hover: #1c1d21;
   --tag-background: rgba(80, 180, 216, 0.16);
   --tag-background-hover: #50b4d8;
-  --tag-border: 1px solid rgba(80, 180, 216, 0.38);
-  --tag-border-hover: 1px solid #50b4d8;
+  --tag-border-width: 1px;
+  --tag-border-color: rgba(80, 180, 216, 0.38);
+  --tag-border-color-hover: #50b4d8;
 
   --blockquote-color: #c9cac5;
   --blockquote-border-color: #e7ce57;
@@ -209,7 +214,6 @@ body {
 
   --canvas-background: #1c1d21;
   --canvas-card-label-color: #c9cac5;
-  --canvas-color: 80, 180, 216;
   --canvas-dot-pattern: rgba(248, 248, 242, 0.08);
 }
 
@@ -234,7 +238,6 @@ body {
   --old-hope-purple-readable: #67449a;
   --old-hope-purple-readable-rgb: 103, 68, 154;
   --bold-color: var(--old-hope-green);
-  --italic-color: var(--text-normal);
   --old-hope-find: #e7ce57;
 
   --color-base-00: #fbfbf8;
@@ -249,9 +252,6 @@ body {
   --color-base-60: #606561;
   --color-base-70: #424741;
   --color-base-100: #1c1d21;
-
-  --mono-rgb-0: 255, 255, 255;
-  --mono-rgb-100: 0, 0, 0;
 
   --color-red: #c8293f;
   --color-orange: #c85f14;
@@ -272,10 +272,9 @@ body {
 
   --accent-h: 352;
   --accent-s: 66%;
-  --accent-l: 45%;
-  --interactive-accent: #c8293f;
-  --interactive-accent-hover: #a91f33;
-  --interactive-accent-rgb: 200, 41, 63;
+  --accent-l: 47%;
+  --interactive-accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --interactive-accent-hover: hsl(var(--accent-h), calc(var(--accent-s) + 3%), calc(var(--accent-l) - 8%));
 
   --background-primary: #fbfbf8;
   --background-primary-alt: #f3f4ee;
@@ -285,10 +284,7 @@ body {
   --background-modifier-border-hover: #9a9f98;
   --background-modifier-border-focus: #167c9d;
   --background-modifier-form-field: #ffffff;
-  --background-modifier-form-field-highlighted: #f3f4ee;
   --background-modifier-hover: rgba(22, 124, 157, 0.08);
-  --background-modifier-active: rgba(22, 124, 157, 0.13);
-  --background-modifier-selected: rgba(231, 206, 87, 0.22);
   --background-modifier-error: rgba(200, 41, 63, 0.12);
   --background-modifier-success: rgba(63, 127, 52, 0.12);
   --background-modifier-message: #f3f4ee;
@@ -302,7 +298,7 @@ body {
   --text-error: #c8293f;
   --text-warning: #8a7119;
   --text-success: #3f7f34;
-  --text-selection: #1c1d21;
+  --text-selection: var(--old-hope-selection);
   --text-highlight-bg: rgba(231, 206, 87, 0.34);
   --text-accent: #167c9d;
   --text-accent-hover: #0f5f79;
@@ -326,9 +322,8 @@ body {
   --tab-text-color-focused-active: #1c1d21;
   --tab-text-color-focused: #424741;
   --divider-color: #c7cbc3;
-  --scrollbar-thumb-color: #c7cbc3;
-  --scrollbar-thumb-color-hover: #9a9f98;
-  --scrollbar-active-thumb-color: #167c9d;
+  --scrollbar-thumb-bg: #c7cbc3;
+  --scrollbar-active-thumb-bg: #9a9f98;
   --status-bar-background: #e9ebe4;
   --status-bar-border-color: #c7cbc3;
 
@@ -336,10 +331,9 @@ body {
   --nav-item-color-hover: #1c1d21;
   --nav-item-color-active: #1c1d21;
   --nav-item-background-hover: rgba(22, 124, 157, 0.08);
-  --nav-item-background-active: rgba(200, 41, 63, 0.12);
+  --nav-item-background-active: color-mix(in srgb, var(--interactive-accent) 12%, transparent);
   --nav-indentation-guide-color: #c7cbc3;
   --nav-collapse-icon-color: #767b78;
-  --nav-collapse-icon-color-collapsed: #767b78;
 
   --indentation-guide-color: #c7cbc3;
   --indentation-guide-color-active: #167c9d;
@@ -357,12 +351,13 @@ body {
   --code-tag: #c8293f;
   --code-value: #67449a;
 
-  --tag-color: #167c9d;
+  --tag-color: #0f5f79;
   --tag-color-hover: #ffffff;
   --tag-background: rgba(22, 124, 157, 0.12);
   --tag-background-hover: #167c9d;
-  --tag-border: 1px solid rgba(22, 124, 157, 0.32);
-  --tag-border-hover: 1px solid #167c9d;
+  --tag-border-width: 1px;
+  --tag-border-color: rgba(22, 124, 157, 0.32);
+  --tag-border-color-hover: #167c9d;
 
   --blockquote-color: #424741;
   --blockquote-border-color: #8a7119;
@@ -390,17 +385,7 @@ body {
 
   --canvas-background: #fbfbf8;
   --canvas-card-label-color: #424741;
-  --canvas-color: 22, 124, 157;
   --canvas-dot-pattern: rgba(28, 29, 33, 0.08);
-}
-
-.workspace,
-.workspace-split,
-.workspace-tabs,
-.workspace-tab-container,
-.workspace-leaf,
-.workspace-leaf-content {
-  background-color: var(--background-primary);
 }
 
 .workspace-ribbon,
@@ -457,8 +442,7 @@ body {
 .modal,
 .menu,
 .suggestion-container,
-.popover,
-.hover-popover .markdown-embed {
+.popover {
   background-color: var(--background-secondary);
   border: 1px solid var(--background-modifier-border);
   border-radius: 2px;
@@ -468,7 +452,7 @@ body {
 }
 
 .status-bar {
-  font-family: var(--font-monospace-theme);
+  font-family: var(--font-monospace);
   font-size: 10px;
   letter-spacing: 0.055em;
   box-shadow: inset 0 1px 0 rgba(var(--color-blue-rgb), 0.16);
@@ -528,22 +512,9 @@ textarea:focus,
   box-shadow: 0 0 0 2px rgba(var(--color-blue-rgb), 0.18);
 }
 
-.markdown-source-view,
-.markdown-reading-view,
-.markdown-preview-view,
-.cm-s-obsidian,
-.cm-editor {
-  color: var(--text-normal);
-  background-color: var(--background-primary);
-}
-
 .markdown-preview-view,
 .markdown-source-view.mod-cm6 .cm-content {
   line-height: 1.58;
-}
-
-.markdown-source-view.mod-cm6 .cm-scroller {
-  font-family: var(--font-editor-theme);
 }
 
 .markdown-source-view.mod-cm6 .cm-content,
@@ -552,17 +523,12 @@ textarea:focus,
   caret-color: var(--old-hope-caret);
 }
 
-.markdown-source-view.mod-cm6 .cm-line.cm-activeLine,
-.markdown-source-view.mod-cm6 .cm-activeLineGutter {
-  background-color: var(--background-modifier-hover);
-}
-
 .markdown-source-view.mod-cm6 .cm-selectionBackground,
 .markdown-source-view.mod-cm6 .cm-line::selection,
 .markdown-source-view.mod-cm6 .cm-line *::selection,
 .markdown-rendered ::selection {
   background-color: var(--old-hope-selection);
-  color: var(--text-selection);
+  color: var(--text-normal);
 }
 
 .markdown-source-view.mod-cm6 .cm-gutters {
@@ -580,9 +546,7 @@ textarea:focus,
 }
 
 .search-result-file-matched-text,
-.is-flashing,
-.cm-searchMatch,
-.cm-searchMatch-selected {
+.is-flashing {
   color: #1c1d21;
   background-color: var(--old-hope-find);
 }
@@ -627,14 +591,10 @@ textarea:focus,
   color: var(--old-hope-cyan);
 }
 
-.markdown-rendered strong,
-.markdown-source-view.mod-cm6 .cm-strong {
-  color: var(--bold-color);
-}
-
-.markdown-rendered em,
-.markdown-source-view.mod-cm6 .cm-em {
-  color: var(--italic-color);
+/* Emphasis keeps its context color inside headings, links, and callout titles. */
+.markdown-rendered :is(h1, h2, h3, h4, h5, h6, a) :is(strong, b, em, i),
+.callout-title :is(strong, b, em, i) {
+  color: inherit;
 }
 
 .markdown-rendered mark,
@@ -669,14 +629,8 @@ textarea:focus,
   background-color: var(--table-row-background-hover);
 }
 
-.markdown-rendered ul > li::marker,
-.markdown-rendered ol > li::marker,
-.markdown-source-view.mod-cm6 .cm-formatting-list {
-  color: var(--old-hope-orange);
-}
-
-.markdown-rendered code,
-.markdown-source-view.mod-cm6 .cm-inline-code {
+.markdown-rendered :not(pre) > code,
+.markdown-source-view.mod-cm6 .cm-inline-code:not(.cm-formatting) {
   color: var(--old-hope-green);
   background-color: var(--code-background);
   border: 1px solid var(--background-modifier-border);
@@ -775,100 +729,31 @@ textarea:focus,
   color: var(--link-color-hover);
 }
 
-.tag,
-.cm-hashtag {
-  color: var(--tag-color);
-  background-color: var(--tag-background);
-  border: var(--tag-border);
-  border-radius: 999px;
-  text-decoration: none;
-}
-
-.tag:hover,
-.cm-hashtag:hover {
-  color: var(--tag-color-hover);
-  background-color: var(--tag-background-hover);
-  border: var(--tag-border-hover);
-}
-
 .metadata-container,
 .metadata-property {
   border-color: var(--background-modifier-border);
 }
 
-.metadata-property-key {
-  color: var(--old-hope-yellow);
-}
-
-.metadata-property-value {
-  color: var(--text-muted);
-}
-
-.callout {
-  background-color: rgba(var(--callout-color), 0.1);
-  border: 1px solid rgba(var(--callout-color), 0.38);
-  border-left-width: 3px;
-}
-
 .callout-title {
-  color: rgb(var(--callout-color));
-  font-family: var(--font-monospace-theme);
+  font-family: var(--font-monospace);
   font-size: 0.9em;
   letter-spacing: 0.045em;
   text-transform: uppercase;
 }
 
-.callout[data-callout="note"],
-.callout[data-callout="abstract"],
-.callout[data-callout="summary"],
-.callout[data-callout="tldr"],
-.callout[data-callout="info"],
-.callout[data-callout="todo"] {
-  --callout-color: 80, 180, 216;
+/* Titles sit on a 10% tint of their own color; nudge them toward the text color to keep WCAG AA. */
+.theme-dark .callout-title {
+  color: color-mix(in oklch, var(--callout-color), white 22%);
 }
 
-.callout[data-callout="tip"],
-.callout[data-callout="hint"],
-.callout[data-callout="success"],
-.callout[data-callout="check"],
-.callout[data-callout="done"] {
-  --callout-color: 120, 188, 101;
-}
-
-.callout[data-callout="question"],
-.callout[data-callout="help"],
-.callout[data-callout="faq"],
-.callout[data-callout="warning"],
-.callout[data-callout="caution"],
-.callout[data-callout="attention"] {
-  --callout-color: 231, 206, 87;
-}
-
-.callout[data-callout="failure"],
-.callout[data-callout="fail"],
-.callout[data-callout="missing"],
-.callout[data-callout="danger"],
-.callout[data-callout="error"],
-.callout[data-callout="bug"] {
-  --callout-color: 235, 61, 84;
-}
-
-.callout[data-callout="example"],
-.callout[data-callout="quote"],
-.callout[data-callout="cite"] {
-  --callout-color: var(--old-hope-purple-readable-rgb);
+.theme-light .callout-title {
+  color: color-mix(in oklch, var(--callout-color), black 22%);
 }
 
 .canvas-wrapper,
 .canvas,
 .canvas-background {
   background-color: var(--canvas-background);
-}
-
-.canvas-node {
-  --canvas-node-border-color: var(--background-modifier-border);
-  --canvas-node-background: var(--background-secondary);
-  --canvas-node-label-color: var(--canvas-card-label-color);
 }
 
 .canvas-node-container,
@@ -879,7 +764,7 @@ textarea:focus,
 }
 
 .canvas-node-label {
-  font-family: var(--font-monospace-theme);
+  font-family: var(--font-monospace);
   letter-spacing: 0.035em;
 }
 
@@ -889,10 +774,6 @@ textarea:focus,
   box-shadow:
     inset 2px 0 0 rgba(var(--color-blue-rgb), 0.28),
     0 12px 32px rgba(0, 0, 0, 0.3);
-}
-
-.canvas-node.is-focused {
-  --canvas-node-border-color: var(--old-hope-yellow);
 }
 
 .canvas-node.is-selected .canvas-node-container,
@@ -997,13 +878,30 @@ textarea:focus,
   display: block;
   padding: 10px 52px 9px 12px;
   color: #78c9e6;
-  font-family: var(--font-monospace-theme);
+  font-family: var(--font-monospace);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   content: "NAV COMPUTER // INDEX";
   border-bottom: 1px solid rgba(80, 180, 216, 0.24);
+}
+
+/* The graph panel stays dark in light mode, so its controls need dark-mode tokens too. */
+.theme-light .workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"]) .graph-controls {
+  color-scheme: dark;
+  --text-normal: #f8f8f2;
+  --text-muted: #c9cac5;
+  --text-faint: #959798;
+  --icon-color: #c9cac5;
+  --icon-color-hover: #f8f8f2;
+  --interactive-normal: #2f3542;
+  --interactive-hover: #3a4050;
+  --background-modifier-form-field: rgba(8, 12, 18, 0.86);
+  --background-modifier-border: #3f4654;
+  --background-modifier-border-hover: #565d6a;
+  --background-modifier-hover: rgba(80, 180, 216, 0.09);
+  --slider-track-background: #565d6a;
 }
 
 .workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"])
@@ -1016,12 +914,12 @@ textarea:focus,
 .workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"])
   .graph-controls .setting-item-name {
   color: #dff7ff;
-  font-family: var(--font-monospace-theme);
+  font-family: var(--font-monospace);
   letter-spacing: 0.035em;
 }
 
 .workspace-leaf-content:is([data-type="graph"], [data-type="localgraph"])
-  .graph-controls input[type="text"] {
+  .graph-controls input:is([type="text"], [type="search"]) {
   color: #dff7ff;
   background-color: rgba(8, 12, 18, 0.86);
   border-color: rgba(80, 180, 216, 0.28);
@@ -1047,30 +945,6 @@ textarea:focus,
 
 .graph-view.color-fill-attachment {
   color: var(--graph-node-attachment);
-}
-
-.graph-view.color-fill-1 {
-  color: #eb3d54;
-}
-
-.graph-view.color-fill-2 {
-  color: #ef7c2b;
-}
-
-.graph-view.color-fill-3 {
-  color: #e7ce57;
-}
-
-.graph-view.color-fill-4 {
-  color: #78bc65;
-}
-
-.graph-view.color-fill-5 {
-  color: #50b4d8;
-}
-
-.graph-view.color-fill-6 {
-  color: #a67bd5;
 }
 
 .graph-view.color-line {
@@ -1111,11 +985,6 @@ textarea:focus,
 .installed-plugin-container,
 .setting-item {
   border-color: var(--background-modifier-border);
-}
-
-.progress-bar,
-.progress-bar-subline {
-  background-color: var(--background-modifier-border);
 }
 
 .progress-bar-message {

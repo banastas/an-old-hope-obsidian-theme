@@ -1,6 +1,6 @@
 # An Old Hope for Obsidian
 
-A dark Obsidian theme inspired by a galaxy far, far away, porting the An Old Hope palette to modern Obsidian with styled Markdown, callouts, graph view, canvas, and editor syntax.
+A dark-first Obsidian theme with a matching light mode, inspired by a galaxy far, far away, porting the An Old Hope palette to modern Obsidian with styled Markdown, callouts, graph view, canvas, and editor syntax.
 
 ## Preview
 
@@ -15,6 +15,8 @@ Global and local graphs become a dedicated night-mode cartography display in bot
 The wider interface borrows only the motifs that improve hierarchy: telemetry-style status text, a cyan instrument edge on transient panels, monospaced callout headers, and schematic framing for Canvas controls. Document surfaces remain quiet and readable instead of turning every note into a cockpit prop.
 
 ## Install
+
+Requires Obsidian 1.13 or later.
 
 ### Manual install
 
@@ -53,7 +55,7 @@ Run the validation check before publishing:
 npm test
 ```
 
-The validator checks that the manifest matches the expected Obsidian theme shape, the original An Old Hope palette is present, key Obsidian selectors and variables exist, the CSS has balanced braces/comments/strings, and text-bearing purple roles meet WCAG AA contrast in both color modes.
+The validator checks that the manifest matches the expected Obsidian theme shape, the original An Old Hope palette is present, key Obsidian selectors and variables exist, the CSS has balanced braces/comments/strings, key text roles meet WCAG AA contrast, callout and canvas colors use Obsidian 1.13's full-color format, `--text-selection` stays a background color, and `font-family` rules go through Obsidian's resolved font variables so user font settings apply.
 
 ## Credits
 
