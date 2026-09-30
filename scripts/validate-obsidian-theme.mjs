@@ -49,8 +49,6 @@ const requiredGraphMotifs = [
   "NAV COMPUTER // INDEX",
   ".graph-view.color-text",
   ".graph-view.color-arrow",
-  ".graph-view.color-fill-1",
-  ".graph-view.color-fill-6",
   ".canvas-controls"
 ];
 
@@ -90,7 +88,19 @@ const contrastPairs = [
     selector: ".theme-light",
     variable: "--graph-text",
     background: "#080c12"
-  }
+  },
+  {
+    label: "light tag text",
+    selector: ".theme-light",
+    variable: "--tag-color",
+    background: "#fbfbf8"
+  },
+  ...["--color-red", "--color-yellow", "--color-green", "--color-cyan"].map((variable) => ({
+    label: `light ${variable.replace("--color-", "")} callout/text role`,
+    selector: ".theme-light",
+    variable,
+    background: "#fbfbf8"
+  }))
 ];
 
 function assert(condition, message) {
@@ -117,10 +127,21 @@ function contrastRatio(foreground, background) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-function readHexVariable(css, selector, variable) {
+function readBlock(css, selector) {
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const block = css.match(new RegExp(`${escapedSelector}\\s*\\{([\\s\\S]*?)\\n\\}`));
   assert(block, `theme.css is missing the ${selector} block.`);
+  return block;
+}
+
+function readVariable(css, selector, variable) {
+  const value = readBlock(css, selector)[1].match(new RegExp(`\\s${variable}:\\s*([^;]+);`));
+  assert(value, `${selector} is missing ${variable}.`);
+  return value[1].trim();
+}
+
+function readHexVariable(css, selector, variable) {
+  const block = readBlock(css, selector);
 
   const value = block[1].match(new RegExp(`${variable}:\\s*(#[0-9a-f]{6})`, "i"));
   assert(value, `${selector} is missing a hex value for ${variable}.`);
@@ -194,7 +215,11 @@ assert(
   packageManifest.version === manifest.version,
   `package.json version ${packageManifest.version} must match manifest.json version ${manifest.version}.`
 );
-assert(/^1\./.test(manifest.minAppVersion), "minAppVersion should target Obsidian 1.x for the modern theme format.");
+const [minMajor, minMinor] = manifest.minAppVersion.split(".").map(Number);
+assert(
+  minMajor > 1 || (minMajor === 1 && minMinor >= 13),
+  "minAppVersion must be at least 1.13.0: the theme uses Obsidian 1.13's color variables (full CSS colors for callouts and canvas)."
+);
 assert(readme.includes("](screenshot.png)"), "README.md should display the repository screenshot.");
 assert(
   screenshot.subarray(1, 4).toString("ascii") === "PNG",
@@ -239,6 +264,30 @@ assert(
 );
 
 assert(!/obsidian\.css/i.test(css), "theme.css should not refer to the legacy obsidian.css theme file.");
+
+// Obsidian 1.13+ reads callout and canvas colors as full CSS colors. An RGB triplet
+// makes every declaration that consumes them invalid (unstyled callouts, invisible canvas edges).
+assert(
+  !/--(callout|canvas)-[a-z-]*color[a-z-]*:\s*\d+\s*,/.test(css) && !/--callout-(?!border|radius|padding|title|content|icon|blend)[a-z-]+:\s*\d+\s*,/.test(css),
+  "Callout and canvas color variables must be CSS colors, not RGB triplets (Obsidian 1.13+)."
+);
+assert(!/rgba?\(var\(--callout-color\)/.test(css), "Use color-mix() with --callout-color; rgba(var(--callout-color), a) is invalid in Obsidian 1.13+.");
+
+// --text-selection is the selection background. Matching the text color makes selections invisible.
+for (const selector of [".theme-dark", ".theme-light"]) {
+  const selection = readVariable(css, selector, "--text-selection");
+  const text = readVariable(css, selector, "--text-normal");
+  assert(
+    selection !== text && selection !== "var(--text-normal)",
+    `${selector} --text-selection is a background color and must differ from --text-normal (${text}).`
+  );
+}
+
+// font-family must use the resolved variables so the user's font settings still apply.
+assert(
+  !/font-family:\s*var\(--font-[a-z]+-theme\)/.test(css),
+  "Use var(--font-text) / var(--font-monospace) in font-family, not the *-theme variables, so user font overrides apply."
+);
 assert(css.split("\n").length > 500, "theme.css looks too small for the complete Obsidian port.");
 
 console.log("Obsidian theme validation passed.");
